@@ -1,4 +1,4 @@
-<h1>Claimer</h1>
+<h1>Disclaimer</h1>
 This is personal project to watch for changes on websites by scraping their content periodically and getting notified if changes in specified html element occur.
 
 That said I am not optimizing this app in any way. It is meant for my personal use.

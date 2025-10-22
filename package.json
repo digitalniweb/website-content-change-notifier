@@ -10,7 +10,10 @@
 	},
 	"keywords": [
 		"notifier",
-		"web checker"
+		"web checker",
+		"web change check",
+		"website content",
+		"website difference checker"
 	],
 	"author": "digitalniweb",
 	"license": "MIT",

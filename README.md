@@ -21,3 +21,7 @@ Change location in "notifier-start.bat" which you can use to start automatically
 -   Press `Win + R` to open `Run`
 -   Type `shell:startup`
 -   Copy .bat file or its shortcut (better) to opened folder
+
+<h2>Other</h2>
+
+For manual changes to sqlite database using this vscode plugin `SQLite3 Editor`

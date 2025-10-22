@@ -58,11 +58,12 @@ export class Sites {
 	}
 
 	static addSite(
-		url: string,
-		selector: string,
-		name: string,
-		description: string,
-		last_value: string
+		url: Site["url"],
+		selector: Site["selector"],
+		name: Site["name"],
+		description: Site["description"],
+		last_value: Site["last_value"],
+		active: Site["active"] = 1
 	) {
 		const stmtSelect = db.getDb().prepare(`
             SELECT * FROM sites WHERE url=? AND selector=? AND name=?
@@ -75,16 +76,18 @@ export class Sites {
 		}
 
 		const stmt = db.getDb().prepare(`
-            INSERT INTO sites (url, selector, name, description, last_value)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO sites (url, selector, name, description, last_value, active)
+            VALUES (?, ?, ?, ?, ?, ?)
         `);
 
-		stmt.run(url, selector, name, description, last_value);
+		stmt.run(url, selector, name, description, last_value, active);
 		console.log("✅ Site added!");
 	}
 
-	static getAllSites() {
-		return db.getDb().prepare("SELECT * FROM sites").all() as Site[];
+	static getAllSites(activeOnly = true) {
+		let query = "SELECT * FROM sites";
+		if (activeOnly) query += " WHERE active=1";
+		return db.getDb().prepare(query).all() as Site[];
 	}
 	static updateSite(value: string, changed: boolean, siteId: number) {
 		// const now = new Date().toISOString();
@@ -117,7 +120,8 @@ export class Sites {
                     description TEXT,
                     last_value TEXT,
                     last_checked TEXT,
-                    last_changed TEXT
+                    last_changed TEXT,
+   					active INTEGER DEFAULT 1
                 )
                 `
 			)

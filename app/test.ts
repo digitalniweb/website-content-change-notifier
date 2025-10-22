@@ -1,12 +1,14 @@
-import fs from "fs";
-import path from "path";
+import axios from "axios";
 
-console.log(process.cwd());
-
-let dbFile = path.resolve(process.cwd(), `db/data.db`);
-if (!fs.existsSync(dbFile)) {
-	fs.writeFileSync(dbFile, "", "utf8");
-}
+const response = await axios.get<string>(
+	"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+	{
+		timeout: 10000,
+	}
+);
+console.log(
+	(response.data as unknown as { bitcoin: { usd: number } })?.bitcoin?.usd
+);
 
 // if (fs.existsSync(assocFile)) {
 // 	let assocFileUrl = pathToFileURL(assocFile);

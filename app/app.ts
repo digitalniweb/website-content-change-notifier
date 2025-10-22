@@ -1,7 +1,7 @@
 import { Scheduler } from "./Scheduler.ts";
 import { Sites } from "./Sites.ts";
 
-import checkBtcUnder100k from "./customCheckers/checkBtcUnder100k.ts";
+import checkBtcBelowPrice from "./customCheckers/checkBtcBelowPrice.ts";
 
 if (!Sites.getCount())
 	console.log("Nothing to watch yet. Add website via 'app/addSite.ts'");
@@ -11,5 +11,5 @@ Scheduler.addScheduler("0 */4 * * *", () => {
 	Sites.checkAllSitesChanges();
 
 	// you can write other custom watchers here or create new "Schedulers" with different timings
-	checkBtcUnder100k();
+	checkBtcBelowPrice(100000, "🔔 BTC is under 100k USD");
 });

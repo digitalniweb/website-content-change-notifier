@@ -9,6 +9,8 @@ Used on Windows 11. Other platforms not tested.
 
 <h2>How it works</h2>
 
+_Works for rendered pages only. Not for dynamically loaded pages via js. The elements must be on the site on load!_
+
 -   Specify element via its selector on page you want to check.
     It will get the first element if there is multiple elements with the same selector, e.g.: `.super-important-stuff`
 -   It will periodically check if the text content of this element differs from the last time it was checked.
@@ -24,7 +26,9 @@ Using node 24+ with types striping - no need to compile the project
 -   `npm run start` - main script to be executed - starts the checking, don't close terminal.
 -   `npm run add-site` - edit `app/addSite.ts` file and execute this command to add a site to check
 
-**For automatic start on Windows**
+<h2>Automation</h2>
+
+<h3>Windows</h3>
 
 Change location in `notifier-start.bat` which you can use to start automatically on PC start
 

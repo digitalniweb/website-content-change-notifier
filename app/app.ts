@@ -7,4 +7,6 @@ if (!Sites.getCount())
 // Schedule a task to run every hour divisible by 4 throughout the day - 00:00, 04:00, 08:00,...
 Scheduler.addScheduler("0 */4 * * *", () => {
 	Sites.checkAllSitesChanges();
+
+	// you can write other custom watchers here or create new "Schedulers" with different timings
 });

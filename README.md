@@ -12,11 +12,10 @@ Used on Windows 11. Other platforms not tested.
 -   Specify element via its selector on page you want to check.
     It will get the first element if there is multiple elements with the same selector, e.g.: `.super-important-stuff`
 -   It will periodically check if the text content of this element differs from the last time it was checked.
--   Changes are saved to `sqlite db`
 -   On change:
     -   you will get system notification
     -   temporary info is printed in opened terminal which runs the app
-    -   values will be saved in sqlite db
+    -   values are saved in `sqlite db` (For manual changes to database I am using vscode plugin: `SQLite3 Editor`)
 
 <h2>Usage</h2>
 
@@ -33,8 +32,6 @@ Change location in `notifier-start.bat` which you can use to start automatically
 -   Type `shell:startup`
 -   Copy .bat file or its shortcut (better) to opened folder
 
-<h2>Other</h2>
+<h2>GUI</h2>
 
-For manual changes to sqlite database using vscode plugin: `SQLite3 Editor`
-
-There is no GUI (yet?)
+There is no GUI

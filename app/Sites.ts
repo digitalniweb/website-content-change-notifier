@@ -23,6 +23,14 @@ export class Sites {
 
 			if (!value) {
 				console.log(`⚠️ No match for ${site.name}`);
+				notifier.notify({
+					title: `No value detected - ${site.name}`,
+					message: `The value might not exist anymore.
+					Last value: ${site.last_value}`,
+					wait: false,
+					open: site.url,
+					// icon: path.resolve(cwd(), "images/mark-red.jpg"), // doesnt work
+				});
 				return;
 			}
 

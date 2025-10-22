@@ -9,7 +9,15 @@ Used on Windows 11. Other platforms not tested.
 
 <h2>Usage</h2>
 
-Using node 24+ with types striping
+Using node 24+ with types striping - no need to compile the project
 
--   "node app/app.ts" - main script to be executed - starts the checking, don't close terminal.
--   "node app/addSite.ts" - change this file and execute it to add a site to check
+-   "npm run start" - main script to be executed - starts the checking, don't close terminal.
+-   "npm run add-site" - edit "app/addSite.ts" file and execute this command to add a site to check
+
+**For automatic start on Windows**
+
+Change location in "notifier-start.bat" which you can use to start automatically on PC start
+
+-   Press `Win + R` to open `Run`
+-   Type `shell:startup`
+-   Copy .bat file or its shortcut (better) to opened folder

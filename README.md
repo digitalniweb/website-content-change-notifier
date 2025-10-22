@@ -5,6 +5,8 @@ That said I am not optimizing this app in any way. It is meant for my personal u
 
 **I am not responsible for any problems caused by using this app.**
 
+Used on Windows 11. Other platforms not tested.
+
 <h2>Usage</h2>
 
 Using node 24+ with types striping

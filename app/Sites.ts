@@ -3,10 +3,10 @@ import * as cheerio from "cheerio";
 import notifier from "node-notifier";
 import db from "../db/Database.ts";
 import type { Site } from "../types/Site.ts";
-export default class Sites {
+export class Sites {
 	constructor() {}
 
-	static checkAllSites(): void {
+	static checkAllSitesChanges(): void {
 		const sites = Sites.getAllSites();
 		for (const site of sites) {
 			Sites.checkSiteChange(site);

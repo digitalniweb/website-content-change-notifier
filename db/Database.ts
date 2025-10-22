@@ -44,8 +44,8 @@ class Database {
 	}
 
 	public async createTables() {
-		let Sites = await import("../app/Sites.ts");
-		Sites.default.createTable();
+		let importSites = await import("../app/Sites.ts");
+		importSites.Sites.createTable();
 	}
 }
 export default Database.getInstance();

@@ -1,4 +1,4 @@
-import Sites from "./Sites.ts";
+import { Sites } from "./Sites.ts";
 Sites.addSite(
 	"https://github.com/nuxt/nuxt/releases/",
 	".f1 a",

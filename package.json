@@ -2,13 +2,18 @@
 	"name": "website-content-change-notifier",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "app/app.ts",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "node app/test.ts",
+		"start": "node app/app.ts",
+		"add-site": "node app/addSite.ts"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"keywords": [
+		"notifier",
+		"web checker"
+	],
+	"author": "digitalniweb",
+	"license": "MIT",
 	"type": "module",
 	"dependencies": {
 		"axios": "^1.12.2",
@@ -19,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@types/better-sqlite3": "^7.6.13",
-		"@types/node": "^24.8.1",
+		"@types/node": "^24.9.1",
 		"@types/node-notifier": "^8.0.5",
 		"typescript": "^5.9.3"
 	}

@@ -19,6 +19,8 @@ _Works for rendered pages only. Not for dynamically loaded pages via js. The ele
     -   temporary info is printed in opened terminal which runs the app
     -   values are saved in `sqlite db` (For manual changes to database I am using vscode plugin: `SQLite3 Editor`)
 
+You can get notified about anything, not just from scraped content. You can create custom notifiers and use APIs like in `app/customCheckers/checkBtcBelowPrice.ts`
+
 <h2>Usage</h2>
 
 Using node 24+ with types striping - no need to compile the project

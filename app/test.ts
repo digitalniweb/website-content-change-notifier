@@ -1,19 +1,25 @@
-import axios from "axios";
-
-const response = await axios.get<string>(
-	"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+import { exec } from "child_process";
+import notifier from "node-notifier";
+import path from "path";
+import { cwd } from "process";
+notifier.notify(
 	{
-		timeout: 10000,
+		title: `icon test and open url`,
+		message: `test`,
+		wait: true,
+		open: "https://www.youtube.com/",
+		actions: "actions",
+		icon: path.resolve(cwd(), "images/ok.ico"), // doesnt work
+	},
+	function (error, response, metadata) {
+		if (metadata?.activationType === "clicked")
+			exec(`start "" "https://www.youtube.com/"`);
 	}
 );
-console.log(
-	(response.data as unknown as { bitcoin: { usd: number } })?.bitcoin?.usd
-);
+// notifier.on("click", (a, b, c) => {
+// 	console.log(a);
+// 	console.log(b);
+// 	console.log(c);
 
-// if (fs.existsSync(assocFile)) {
-// 	let assocFileUrl = pathToFileURL(assocFile);
-// 	let associationsGlobalData = await import(
-// 		assocFileUrl.href
-// 	);
-// 	associationsGlobalData.createAssociationsGlobalData();
-// }
+// 	exec(`start "" "https://www.youtube.com/"`); // Windows-safe open
+// });

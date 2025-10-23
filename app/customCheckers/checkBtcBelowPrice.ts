@@ -1,5 +1,8 @@
 import axios from "axios";
+import { exec } from "child_process";
 import notifier from "node-notifier";
+import path from "path";
+import { cwd } from "process";
 
 /**
  * Checks whether the price of BTC is below `price`
@@ -12,7 +15,7 @@ export default async function checkBtcBelowPrice(
 	customNotification = ""
 ) {
 	// this actually uses free json api instead of scraping web
-	// web with BTC price: https://www.cnbc.com/quotes/BTC.CM= and selector
+	// web with BTC price: https://www.cnbc.com/quotes/BTC.CM= and selector .QuoteStrip-lastPrice
 	const response = await axios.get<string>(
 		"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
 		{
@@ -23,13 +26,22 @@ export default async function checkBtcBelowPrice(
 		?.bitcoin?.usd;
 	if (!value) {
 		console.log(`⚠️ BTC checker failed`);
-		notifier.notify({
-			title: `BTC checker failed`,
-			message: `No BTC value detected!`,
-			wait: false,
-			open: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
-			// icon: path.resolve(cwd(), "images/mark-red.jpg"), // doesnt work
-		});
+		notifier.notify(
+			{
+				title: `BTC checker failed`,
+				message: `No BTC value detected!`,
+				wait: false,
+				open: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd", // "open" doesn't work so use callback instead
+				icon: path.resolve(cwd(), "images/mark-red.ico"),
+			},
+			function (error, response, metadata) {
+				// "open" doesn't work so use callback instead
+				if (metadata?.activationType === "clicked")
+					exec(
+						`start "" "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"`
+					);
+			}
+		);
 		return;
 	}
 

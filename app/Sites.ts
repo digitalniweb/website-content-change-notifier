@@ -1,6 +1,9 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { exec } from "child_process";
 import notifier from "node-notifier";
+import path from "path";
+import { cwd } from "process";
 import db from "../db/Database.ts";
 import type { Site } from "../types/Site.ts";
 export class Sites {
@@ -23,14 +26,21 @@ export class Sites {
 
 			if (!value) {
 				console.log(`⚠️ No match for ${site.name}`);
-				notifier.notify({
-					title: `No value detected - ${site.name}`,
-					message: `The value might not exist anymore.
+				notifier.notify(
+					{
+						title: `No value detected - ${site.name}`,
+						message: `The value might not exist anymore.
 					Last value: ${site.last_value}`,
-					wait: false,
-					open: site.url,
-					// icon: path.resolve(cwd(), "images/mark-red.jpg"), // doesnt work
-				});
+						wait: false,
+						open: site.url, // "open" doesn't work so use callback instead
+						icon: path.resolve(cwd(), "images/mark-red.ico"),
+					},
+					function (error, response, metadata) {
+						// "open" doesn't work so use callback instead
+						if (metadata?.activationType === "clicked")
+							exec(`start "" "${site.url}"`);
+					}
+				);
 				return;
 			}
 
@@ -39,14 +49,21 @@ export class Sites {
 			if (site.last_value !== value) {
 				changed = true;
 				console.log(`🔔 Change detected on ${site.name}`);
-				notifier.notify({
-					title: `${site.name}`,
-					message: `${site.description}
+				notifier.notify(
+					{
+						title: `${site.name}`,
+						message: `${site.description}
 					New value: ${value}`,
-					wait: false,
-					open: site.url,
-					// icon: path.resolve(cwd(), "images/mark-green.jpg"), // doesnt work
-				});
+						wait: false,
+						open: site.url, // "open" doesn't work so use callback instead
+						icon: path.resolve(cwd(), "images/mark-green.ico"),
+					},
+					function (error, response, metadata) {
+						// "open" doesn't work so use callback instead
+						if (metadata?.activationType === "clicked")
+							exec(`start "" "${site.url}"`);
+					}
+				);
 			}
 			Sites.updateSite(value, changed, site.id);
 			// if (changed) return;

@@ -37,6 +37,7 @@ export class Sites {
 					},
 					function (error, response, metadata) {
 						// "open" doesn't work so use callback instead
+						// this works on immediate clicks, if clicked in history of notifications this doesn't work
 						if (metadata?.activationType === "clicked")
 							exec(`start "" "${site.url}"`);
 					}
@@ -60,6 +61,7 @@ export class Sites {
 					},
 					function (error, response, metadata) {
 						// "open" doesn't work so use callback instead
+						// this works on immediate clicks, if clicked in history of notifications this doesn't work
 						if (metadata?.activationType === "clicked")
 							exec(`start "" "${site.url}"`);
 					}

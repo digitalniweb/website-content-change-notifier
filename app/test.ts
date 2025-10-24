@@ -8,7 +8,6 @@ notifier.notify(
 		message: `test`,
 		wait: true,
 		open: "https://www.youtube.com/",
-		actions: "actions",
 		icon: path.resolve(cwd(), "images/ok.ico"), // doesnt work
 	},
 	function (error, response, metadata) {
@@ -16,10 +15,10 @@ notifier.notify(
 			exec(`start "" "https://www.youtube.com/"`);
 	}
 );
-// notifier.on("click", (a, b, c) => {
-// 	console.log(a);
-// 	console.log(b);
-// 	console.log(c);
+notifier.on("click", (a, b, c) => {
+	console.log(a);
+	console.log(b);
+	console.log(c);
 
-// 	exec(`start "" "https://www.youtube.com/"`); // Windows-safe open
-// });
+	exec(`start "" "https://www.youtube.com/"`); // Windows-safe open
+});

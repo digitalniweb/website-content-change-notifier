@@ -1,14 +1,14 @@
-import sqliteDb from "better-sqlite3";
 import fs from "fs";
+import { DatabaseSync } from "node:sqlite";
 import path from "path";
 
 class Database {
 	static #instance: Database;
 	#file: string = "db/data.db";
-	#db: InstanceType<typeof sqliteDb>;
+	#db: InstanceType<typeof DatabaseSync>;
 
 	private constructor() {
-		this.#db = new sqliteDb(this.#file);
+		this.#db = new DatabaseSync(this.#file);
 
 		this.createDbFile();
 		this.createTables();

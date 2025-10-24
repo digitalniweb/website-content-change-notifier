@@ -26,7 +26,7 @@ You can get notified about anything, not just from scraped content. You can crea
 Using node 24+ with types striping - no need to compile the project
 
 -   `npm run start` - main script to be executed - starts the checking, don't close terminal.
--   `npm run add-site` - edit `app/addSite.ts` file and execute this command to add a site to check
+-   `node app/addSite.ts --url="https://example.com" --selector=".title" --name="Example" --description="Checks title" --last_value="Initial" --active=1` - edit and run in cmd to add a site to check. `url`,`name`,`selector` are required
 
 <h2>Automation</h2>
 

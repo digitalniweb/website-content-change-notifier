@@ -5,8 +5,7 @@
 	"main": "app/app.ts",
 	"scripts": {
 		"test": "node app/test.ts",
-		"start": "node app/app.ts",
-		"add-site": "node app/addSite.ts"
+		"start": "node app/app.ts"
 	},
 	"keywords": [
 		"notifier",

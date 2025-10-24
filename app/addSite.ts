@@ -23,5 +23,3 @@ Sites.addSite(
 	args.last_value ?? "",
 	Number(args.active ?? 1)
 );
-
-console.log(`✅ Site added: ${args.name}`);

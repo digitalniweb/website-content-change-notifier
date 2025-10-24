@@ -107,7 +107,14 @@ export class Sites {
             VALUES (?, ?, ?, ?, ?, ?)
         `);
 
-		stmt.run(url, selector, name, description, last_value, active);
+		stmt.run(
+			url,
+			selector,
+			name,
+			description ?? "",
+			last_value ?? "",
+			active ?? 1
+		);
 		console.log("✅ Site added!");
 	}
 

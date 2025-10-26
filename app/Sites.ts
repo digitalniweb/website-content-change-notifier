@@ -6,6 +6,7 @@ import path from "path";
 import { cwd } from "process";
 import db from "../db/Database.ts";
 import type { Site } from "../types/Site.ts";
+import printRows from "./helperFunctions/printData.ts";
 export class Sites {
 	constructor() {}
 
@@ -14,6 +15,18 @@ export class Sites {
 		for (const site of sites) {
 			Sites.checkSiteChange(site);
 		}
+	}
+
+	static printRows() {
+		printRows<Site>(Sites.getAllSites(), [
+			"id",
+			"url",
+			"selector",
+			"name",
+			"last_value",
+			"last_changed",
+			"active",
+		]);
 	}
 
 	static async checkSiteChange(site: Site): Promise<void> {

@@ -107,6 +107,11 @@ class Database {
 					/^(https?:\/\/)?(www\.)?/,
 					""
 				);
+			if (row.last_changed)
+				(row.last_changed as string) = this.localizeTime(
+					row.last_changed
+				);
+
 			let key: keyof T;
 			for (key in row) {
 				if (!Object.hasOwn(row, key)) continue;
@@ -116,6 +121,33 @@ class Database {
 			}
 		});
 		console.table(rows, columns as string[]);
+	}
+
+	public localizeTime(dateString: string) {
+		const date = new Date(dateString);
+		const now = new Date();
+
+		const diffMs = date.getTime() - now.getTime();
+		const diffSec = Math.round(diffMs / 1000);
+		const diffMin = Math.round(diffSec / 60);
+		const diffHr = Math.round(diffMin / 60);
+		const diffDay = Math.round(diffHr / 24);
+
+		const rtf = new Intl.RelativeTimeFormat(process.env.LANGUAGE ?? "en", {
+			numeric: "auto",
+		});
+
+		let output;
+		if (Math.abs(diffDay) >= 1) {
+			output = rtf.format(diffDay, "day");
+		} else if (Math.abs(diffHr) >= 1) {
+			output = rtf.format(diffHr, "hour");
+		} else if (Math.abs(diffMin) >= 1) {
+			output = rtf.format(diffMin, "minute");
+		} else {
+			output = rtf.format(diffSec, "second");
+		}
+		return output;
 	}
 }
 export default Database.getInstance();

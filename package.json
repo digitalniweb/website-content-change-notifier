@@ -6,8 +6,9 @@
 	"scripts": {
 		"test": "node --env-file=.env app/test.ts",
 		"start": "node --env-file=.env  app/app.ts",
-		"addSite": "node --env-file=.env  app/addSite.ts",
-		"listSites": "node --env-file=.env  app/listSites.ts"
+		"sites-add": "node --env-file=.env  app/sites/add.ts",
+		"sites-list": "node --env-file=.env  app/sites/list.ts",
+		"sites-toggle-active": "node --env-file=.env  app/sites/toggle-active.ts"
 	},
 	"keywords": [
 		"notifier",

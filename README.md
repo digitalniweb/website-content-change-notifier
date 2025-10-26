@@ -26,8 +26,9 @@ You can get notified about anything, not just from scraped content. You can crea
 Using node 24+ with types striping - no need to compile the project
 
 -   `npm run start` - main script to be executed - starts the checking, don't close terminal.
--   `npm run addSite -- --url="https://example.com" --selector=".title" --name="Example" --description="Checks title" --last_value="Initial" --active=1` - edit and run in `cmd` (vscode uses powershell in default which won't work) to add a site to check. `url`,`name`,`selector` are required
--   `npm run listSites` - prints out quick info about all Sites
+-   `npm run sites-add -- --url="https://example.com" --selector=".title" --name="Example" --description="Checks title" --last_value="Initial" --active=1` - edit and run in `cmd` (vscode uses powershell in default which won't work) to add a site to check. `url`,`name`,`selector` are required
+-   `npm run sites-list` - prints out quick info about all Sites
+-   `npm run sites-toggle-active -- --id="1"` - edit and run in `cmd`
 
 <h2>Automation</h2>
 

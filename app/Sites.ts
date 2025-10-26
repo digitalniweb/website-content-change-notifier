@@ -6,19 +6,18 @@ import path from "path";
 import { cwd } from "process";
 import db from "../db/Database.ts";
 import type { Site } from "../types/Site.ts";
-import printRows from "./helperFunctions/printData.ts";
 export class Sites {
 	constructor() {}
 
 	static checkAllSitesChanges(): void {
-		const sites = Sites.getAllSites();
+		const sites = Sites.getAll();
 		for (const site of sites) {
 			Sites.checkSiteChange(site);
 		}
 	}
 
 	static printRows() {
-		printRows<Site>(Sites.getAllSites(), [
+		db.printRows<Site>(Sites.getAll(false), [
 			"id",
 			"url",
 			"selector",
@@ -27,6 +26,10 @@ export class Sites {
 			"last_changed",
 			"active",
 		]);
+	}
+
+	static toggleActive(id: number): number | null {
+		return db.toggleDbBoolean<Site, "active">("sites", id, "active");
 	}
 
 	static async checkSiteChange(site: Site): Promise<void> {
@@ -80,7 +83,7 @@ export class Sites {
 					}
 				);
 			}
-			Sites.updateSite(value, changed, site.id);
+			Sites.update(value, changed, site.id);
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				console.error(`❌ Error on ${site.name}: ${err.message}`);
@@ -94,7 +97,7 @@ export class Sites {
 		return db.getTableRowsCount("sites");
 	}
 
-	static addSite(
+	static add(
 		url: Site["url"],
 		selector: Site["selector"],
 		name: Site["name"],
@@ -128,12 +131,12 @@ export class Sites {
 		console.log("✅ Site added!");
 	}
 
-	static getAllSites(activeOnly = true) {
+	static getAll(activeOnly = true) {
 		let query = "SELECT * FROM sites";
 		if (activeOnly) query += " WHERE active=1";
 		return db.getDb().prepare(query).all() as Site[];
 	}
-	static updateSite(value: string, changed: boolean, siteId: number) {
+	static update(value: string, changed: boolean, siteId: number) {
 		db.getDb()
 			.prepare(
 				`

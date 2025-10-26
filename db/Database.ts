@@ -4,7 +4,7 @@ import path from "path";
 
 class Database {
 	static #instance: Database;
-	#file: string = "db/data.db";
+	#file: string = process.env.DATABASE_FILE as string;
 	#db: InstanceType<typeof DatabaseSync>;
 
 	private constructor() {
@@ -37,7 +37,7 @@ class Database {
 	}
 
 	public createDbFile() {
-		let dbFile = path.resolve(process.cwd(), `db/data.db`);
+		let dbFile = path.resolve(process.cwd(), this.#file);
 		if (!fs.existsSync(dbFile)) {
 			fs.writeFileSync(dbFile, "", "utf8");
 		}

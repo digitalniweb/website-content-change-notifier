@@ -1,12 +1,12 @@
 {
 	"name": "website-content-change-notifier",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Watch for websites' content change and get notified",
 	"main": "app/app.ts",
 	"scripts": {
-		"test": "node app/test.ts",
-		"start": "node app/app.ts",
-		"addSite": "node app/addSite.ts"
+		"test": "node --env-file=.env app/test.ts",
+		"start": "node --env-file=.env  app/app.ts",
+		"addSite": "node --env-file=.env  app/addSite.ts"
 	},
 	"keywords": [
 		"notifier",

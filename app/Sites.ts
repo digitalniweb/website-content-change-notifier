@@ -37,7 +37,7 @@ export class Sites {
 					},
 					function (error, response, metadata) {
 						// "open" doesn't work so use callback instead
-						// this works on immediate clicks, if clicked in history of notifications this doesn't work
+						// This works on immediate clicks only. Clicks in history of notifications don't work.
 						if (metadata?.activationType === "clicked")
 							exec(`start "" "${site.url}"`);
 					}
@@ -54,23 +54,20 @@ export class Sites {
 					{
 						title: `${site.name}`,
 						message: `${site.description}
-					New value: ${value}`,
+						New value: ${value}`,
 						wait: false,
 						open: site.url, // "open" doesn't work so use callback instead
 						icon: path.resolve(cwd(), "images/mark-green.ico"),
 					},
 					function (error, response, metadata) {
 						// "open" doesn't work so use callback instead
-						// this works on immediate clicks, if clicked in history of notifications this doesn't work
+						// This works on immediate clicks only. Clicks in history of notifications don't work.
 						if (metadata?.activationType === "clicked")
 							exec(`start "" "${site.url}"`);
 					}
 				);
 			}
 			Sites.updateSite(value, changed, site.id);
-			// if (changed) return;
-			// const now = new Date().toISOString();
-			// console.log(`${site.name} checked now ${now} - No changes.`);
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				console.error(`❌ Error on ${site.name}: ${err.message}`);
@@ -124,7 +121,6 @@ export class Sites {
 		return db.getDb().prepare(query).all() as Site[];
 	}
 	static updateSite(value: string, changed: boolean, siteId: number) {
-		// const now = new Date().toISOString();
 		db.getDb()
 			.prepare(
 				`

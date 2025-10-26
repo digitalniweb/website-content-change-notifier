@@ -1,1 +1,2 @@
-console.log(process.argv);
+import { Sites } from "./Sites.ts";
+console.log(Sites.getCount());

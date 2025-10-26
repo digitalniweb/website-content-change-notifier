@@ -4,7 +4,7 @@ import path from "path";
 
 class Database {
 	static #instance: Database;
-	#file: string = process.env.DATABASE_FILE as string;
+	#file: string = process.env.DATABASE_FILE ?? "db/data.db";
 	#db: InstanceType<typeof DatabaseSync>;
 
 	private constructor() {

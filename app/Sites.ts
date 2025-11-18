@@ -9,11 +9,13 @@ import type { Site } from "../types/Site.ts";
 export class Sites {
 	constructor() {}
 
-	static checkAllSitesChanges(): void {
+	static async checkAllSitesChanges(): Promise<void[]> {
 		const sites = Sites.getAll();
+		let promises = [];
 		for (const site of sites) {
-			Sites.checkSiteChange(site);
+			promises.push(Sites.checkSiteChange(site));
 		}
+		return Promise.all(promises);
 	}
 
 	static printRows() {

@@ -54,4 +54,5 @@ export default async function checkBtcBelowPrice(
 			// icon: path.resolve(cwd(), "images/mark-green.jpg"), // doesnt work
 		});
 	}
+	console.log(`BTC price is ${value} USD`);
 }

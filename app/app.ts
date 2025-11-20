@@ -1,7 +1,7 @@
+import type { virtualCoinCheckOptions } from "../types/virtulaCoins.ts";
 import { Scheduler } from "./Scheduler.ts";
 import { Sites } from "./Sites.ts";
-
-import checkBtcBelowPrice from "./customCheckers/checkBtcBelowPrice.ts";
+import checkVirtualCoinPrice from "./customCheckers/checkVirtualCoinPrice.ts";
 
 // terminal setup
 process.title = process.env.APP_NAME ?? "Website Checker";
@@ -17,5 +17,24 @@ Scheduler.addScheduler("5 */4 * * *", async () => {
 	console.log(`Sites were checked at: ${new Date().toLocaleString()}`);
 
 	// you can write other custom watchers here or create new "Schedulers" with different timings
-	checkBtcBelowPrice(80000, "🔔 BTC is under 80k USD!");
+	let virtualCoins = [
+		{
+			name: "bitcoin",
+			customName: "BTC",
+			watchPriceBelow: 90000,
+		},
+		{
+			name: "dogecoin",
+			customName: "DOGECOIN",
+			watchPriceBelow: 0.14,
+		},
+	] as virtualCoinCheckOptions[];
+	virtualCoins.forEach((coin) => {
+		checkVirtualCoinPrice({
+			name: coin.name,
+			watchPriceBelow: coin.watchPriceBelow,
+			customName: coin.customName,
+			customNotification: coin.customNotification ?? "",
+		});
+	});
 });

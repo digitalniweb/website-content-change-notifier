@@ -13,8 +13,9 @@ if (!Sites.getCount())
 
 // Schedule a task to run every hour divisible by 4 throughout the day and every 5th minute - 00:05, 04:05, 08:05,...
 Scheduler.addScheduler("5 */4 * * *", async () => {
+	console.log(`Checkings at ${new Date().toLocaleString()}`);
 	await Sites.checkAllSitesChanges();
-	console.log(`Sites were checked at: ${new Date().toLocaleString()}`);
+	console.log(`Sites were checked.`);
 
 	// you can write other custom watchers here or create new "Schedulers" with different timings
 	let virtualCoins = [
@@ -29,12 +30,17 @@ Scheduler.addScheduler("5 */4 * * *", async () => {
 			watchPriceBelow: 0.14,
 		},
 	] as virtualCoinCheckOptions[];
+	let coinsCheck = [] as Promise<void>[];
 	virtualCoins.forEach((coin) => {
-		checkVirtualCoinPrice({
-			name: coin.name,
-			watchPriceBelow: coin.watchPriceBelow,
-			customName: coin.customName,
-			customNotification: coin.customNotification ?? "",
-		});
+		coinsCheck.push(
+			checkVirtualCoinPrice({
+				name: coin.name,
+				watchPriceBelow: coin.watchPriceBelow,
+				customName: coin.customName,
+				customNotification: coin.customNotification ?? "",
+			})
+		);
 	});
+	await Promise.all(coinsCheck);
+	console.log("-----------------------");
 });

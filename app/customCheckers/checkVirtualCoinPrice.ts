@@ -68,7 +68,9 @@ export default async function checkVirtualCoinPrice(
 			console.log(notification);
 			notifier.notify({
 				title: notification,
-				// icon: path.resolve(cwd(), "images/mark-green.jpg"), // doesnt work
+				message: "Wooohooo 🎉", // in Windows 'message' is required to show the notification
+				wait: false,
+				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
 		console.log(`${customName} price is ${value} ${currencyName}`);

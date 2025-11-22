@@ -1,7 +1,7 @@
 import type { virtualCoinCheckOptions } from "../types/virtulaCoins.ts";
+import checkVirtualCoinPrice from "./customCheckers/checkVirtualCoinPrice.ts";
 import { Scheduler } from "./Scheduler.ts";
 import { Sites } from "./Sites.ts";
-import checkVirtualCoinPrice from "./customCheckers/checkVirtualCoinPrice.ts";
 
 // terminal setup
 process.title = process.env.APP_NAME ?? "Website Checker";
@@ -13,21 +13,32 @@ if (!Sites.getCount())
 
 // Schedule a task to run every hour divisible by 4 throughout the day and every 5th minute - 00:05, 04:05, 08:05,...
 Scheduler.addScheduler("5 */4 * * *", async () => {
-	console.log(`Checkings at ${new Date().toLocaleString()}`);
+	console.log(
+		`Checking sites by scraping starting at ${new Date().toLocaleString()}`
+	);
 	await Sites.checkAllSitesChanges();
 	console.log(`Sites were checked.`);
 
-	// you can write other custom watchers here or create new "Schedulers" with different timings
+	// you can write other custom watchers here
+
+	console.log("-----------------------");
+});
+
+// you can create other "Schedulers" with different timings - Every hour
+Scheduler.addScheduler("0 * * * *", async () => {
+	console.log(
+		`Checkings virtual coins values via API starting at ${new Date().toLocaleString()}`
+	);
 	let virtualCoins = [
 		{
 			name: "bitcoin",
 			customName: "BTC",
-			watchPriceBelow: 90000,
+			watchPriceBelow: 80000,
 		},
 		{
 			name: "dogecoin",
 			customName: "DOGECOIN",
-			watchPriceBelow: 0.14,
+			watchPriceBelow: 0.13,
 		},
 	] as virtualCoinCheckOptions[];
 	let coinsCheck = [] as Promise<void>[];

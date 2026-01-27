@@ -1,4 +1,5 @@
 import type { virtualCoinCheckOptions } from "../types/virtulaCoins.ts";
+import checkStocks from "./customCheckers/checkStocks.ts";
 import checkVirtualCoinPrice from "./customCheckers/checkVirtualCoinPrice.ts";
 import { Scheduler } from "./Scheduler.ts";
 import { Sites } from "./Sites.ts";
@@ -14,7 +15,7 @@ if (!Sites.getCount())
 // Schedule a task to run every hour divisible by 4 throughout the day and every 5th minute - 00:05, 04:05, 08:05,...
 Scheduler.addScheduler("5 */4 * * *", async () => {
 	console.log(
-		`Checking sites by scraping starting at ${new Date().toLocaleString()}`
+		`Checking sites by scraping starting at ${new Date().toLocaleString()}`,
 	);
 	await Sites.checkAllSitesChanges();
 	console.log(`Sites were checked.`);
@@ -27,7 +28,7 @@ Scheduler.addScheduler("5 */4 * * *", async () => {
 // you can create other "Schedulers" with different timings - Every hour
 Scheduler.addScheduler("0 * * * *", async () => {
 	console.log(
-		`Checkings virtual coins values via API starting at ${new Date().toLocaleString()}`
+		`Checking virtual coins values via API starting at ${new Date().toLocaleString()}`,
 	);
 	let virtualCoins = [
 		{
@@ -38,7 +39,7 @@ Scheduler.addScheduler("0 * * * *", async () => {
 		{
 			name: "dogecoin",
 			customName: "DOGECOIN",
-			watchPriceBelow: 0.13,
+			watchPriceBelow: 0.12,
 		},
 	] as virtualCoinCheckOptions[];
 	let coinsCheck = [] as Promise<void>[];
@@ -49,9 +50,22 @@ Scheduler.addScheduler("0 * * * *", async () => {
 				watchPriceBelow: coin.watchPriceBelow,
 				customName: coin.customName,
 				customNotification: coin.customNotification ?? "",
-			})
+			}),
 		);
 	});
 	await Promise.all(coinsCheck);
+	console.log("-----------------------");
+});
+
+// you can create other "Schedulers" with different timings - Every hour
+Scheduler.addScheduler("0 * * * *", async () => {
+	console.log(
+		"Checking stock values via API starting at ${new Date().toLocaleString()}",
+	);
+	let stocksCheck = [] as Promise<void>[];
+	["IONQ"].forEach((stockInfo) => {
+		stocksCheck.push(checkStocks(stockInfo));
+	});
+	await Promise.all(stocksCheck);
 	console.log("-----------------------");
 });

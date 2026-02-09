@@ -1,4 +1,9 @@
 import axios from "axios";
+import notifier from "node-notifier";
+import path from "path";
+import { cwd } from "process";
+import { formatMagnitudeFull } from "../helperFunctions/formatMagnitudeFull.ts";
+import console from "console";
 type stockInfo = {
 	Ticker: string;
 	Name: string;
@@ -6,15 +11,46 @@ type stockInfo = {
 	ChangeAmount: number;
 	ChangePercentage: number;
 };
-export default async function checkStocks(stockName: string) {
+type stockOptions = {
+	name: string;
+	watchPriceBelow?: number;
+	customNotification?: string;
+	customName?: string; // name to show, default will be `name`
+	currency?: string;
+	currencyName?: string;
+};
+export default async function checkStocks(options: stockOptions) {
+	let {
+		name,
+		customName,
+		watchPriceBelow = 0,
+		customNotification,
+		currencyName = "USD",
+	} = options;
+	if (!customName) customName = name;
 	const response = await axios.get<string>(
-		`https://stockprices.dev/api/stocks/${stockName}`,
+		`https://stockprices.dev/api/stocks/${name}`,
 		{
 			timeout: 10000,
 		},
 	);
 	const stockInfo = response.data as unknown as stockInfo;
+
+	if (watchPriceBelow && stockInfo.Price < watchPriceBelow) {
+		let notification =
+			customNotification ||
+			`🔔 ${customName ?? name} is under ${formatMagnitudeFull(
+				watchPriceBelow,
+			)} ${currencyName}!`;
+		console.log(notification);
+		notifier.notify({
+			title: notification,
+			message: "Wooohooo 🎉", // in Windows 'message' is required to show the notification
+			wait: false,
+			icon: path.resolve(cwd(), "images/mark-green.ico"),
+		});
+	}
 	console.log(
-		`${stockName} - price: $${stockInfo.Price}, change: ${stockInfo.ChangePercentage} %`,
+		`${name} - price: $${stockInfo.Price}, change: ${stockInfo.ChangePercentage} %`,
 	);
 }

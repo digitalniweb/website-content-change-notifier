@@ -34,12 +34,12 @@ Scheduler.addScheduler("0 * * * *", async () => {
 		{
 			name: "bitcoin",
 			customName: "BTC",
-			watchPriceBelow: 70000,
+			watchPriceBelow: 60000,
 		},
 		{
 			name: "dogecoin",
 			customName: "DOGECOIN",
-			watchPriceBelow: 0.1,
+			watchPriceBelow: 0.09,
 		},
 	] as virtualCoinCheckOptions[];
 	let coinsCheck = [] as Promise<void>[];
@@ -63,9 +63,7 @@ Scheduler.addScheduler("0 * * * *", async () => {
 		`Checking stock values via API starting at ${new Date().toLocaleString()}`,
 	);
 	let stocksCheck = [] as Promise<void>[];
-	["IONQ"].forEach((stockInfo) => {
-		stocksCheck.push(checkStocks(stockInfo));
-	});
+	stocksCheck.push(checkStocks({ name: "IONQ", watchPriceBelow: 30 }));
 	await Promise.all(stocksCheck);
 	console.log("-----------------------");
 });

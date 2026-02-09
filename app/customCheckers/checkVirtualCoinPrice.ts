@@ -7,9 +7,10 @@ import type {
 	PriceResponse,
 	virtualCoinCheckOptions,
 } from "../../types/virtulaCoins.ts";
+import { formatMagnitudeFull } from "../helperFunctions/formatMagnitudeFull.ts";
 
 export default async function checkVirtualCoinPrice(
-	options: virtualCoinCheckOptions
+	options: virtualCoinCheckOptions,
 ) {
 	let {
 		name,
@@ -31,7 +32,7 @@ export default async function checkVirtualCoinPrice(
 			`https://api.coingecko.com/api/v3/simple/price?ids=${name}&vs_currencies=${currency}`,
 			{
 				timeout: 10000,
-			}
+			},
 		);
 
 		const value = (response.data as unknown as PriceResponse)?.[name]?.[
@@ -52,9 +53,9 @@ export default async function checkVirtualCoinPrice(
 					// this works on immediate clicks, if clicked in history of notifications this doesn't work
 					if (metadata?.activationType === "clicked")
 						exec(
-							`start "" "https://api.coingecko.com/api/v3/simple/price?ids=${name}&vs_currencies=${currency}"`
+							`start "" "https://api.coingecko.com/api/v3/simple/price?ids=${name}&vs_currencies=${currency}"`,
 						);
-				}
+				},
 			);
 			return;
 		}
@@ -63,7 +64,7 @@ export default async function checkVirtualCoinPrice(
 			let notification =
 				customNotification ||
 				`🔔 ${customName ?? name} is under ${formatMagnitudeFull(
-					watchPriceBelow
+					watchPriceBelow,
 				)} ${currencyName}!`;
 			console.log(notification);
 			notifier.notify({
@@ -77,20 +78,4 @@ export default async function checkVirtualCoinPrice(
 	} catch (error: any) {
 		console.log(`Get ${customName} price error: ${error.message}`);
 	}
-}
-
-function formatMagnitudeFull(n: number): string {
-	const abs = Math.abs(n);
-
-	if (abs >= 1e12) return (n / 1e12).toFixed(2).replace(/\.00$/, "") + "T";
-	if (abs >= 1e9) return (n / 1e9).toFixed(2).replace(/\.00$/, "") + "B";
-	if (abs >= 1e6) return (n / 1e6).toFixed(2).replace(/\.00$/, "") + "M";
-	if (abs >= 1e3) return (n / 1e3).toFixed(2).replace(/\.00$/, "") + "k";
-	if (abs >= 1) return n.toString(); // base number
-
-	// Small units
-	if (abs >= 1e-3) return (n * 1e3).toFixed(2).replace(/\.00$/, "") + "m"; // milli
-	if (abs >= 1e-6) return (n * 1e6).toFixed(2).replace(/\.00$/, "") + "µ"; // micro
-
-	return n.toString(); // extremely small fallback
 }

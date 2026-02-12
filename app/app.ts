@@ -64,6 +64,11 @@ Scheduler.addScheduler("0 * * * *", async () => {
 	);
 	let stocksCheck = [] as Promise<void>[];
 	stocksCheck.push(checkStocks({ name: "IONQ", watchPriceBelow: 30 }));
+	stocksCheck.push(checkStocks({ name: "QBTS", watchPriceBelow: 15 }));
+	stocksCheck.push(checkStocks({ name: "QCOM", watchPriceBelow: 120 }));
+	stocksCheck.push(checkStocks({ name: "AMD", watchPriceBelow: 160 }));
+	stocksCheck.push(checkStocks({ name: "MSFT", watchPriceBelow: 380 }));
+	stocksCheck.push(checkStocks({ name: "RGTI", watchPriceBelow: 10 }));
 	await Promise.all(stocksCheck);
 	console.log("-----------------------");
 });

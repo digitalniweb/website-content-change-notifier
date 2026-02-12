@@ -76,6 +76,6 @@ export default async function checkVirtualCoinPrice(
 		}
 		console.log(`${customName} price is ${value} ${currencyName}`);
 	} catch (error: any) {
-		console.log(`Get ${customName} price error: ${error.message}`);
+		console.log(`⚠️ Get ${customName} price error: ${error.message}`);
 	}
 }

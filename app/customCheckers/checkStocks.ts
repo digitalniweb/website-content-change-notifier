@@ -4,6 +4,8 @@ import notifier from "node-notifier";
 import path from "path";
 import { cwd } from "process";
 import { formatMagnitudeFull } from "../helperFunctions/formatMagnitudeFull.ts";
+
+// stockprices.dev - not working properly
 type stockInfo = {
 	Ticker: string;
 	Name: string;
@@ -11,6 +13,18 @@ type stockInfo = {
 	ChangeAmount: number;
 	ChangePercentage: number;
 };
+
+type yahooChartStockInfo = {
+	chart: {
+		result: {
+			meta: {
+				regularMarketPrice: number;
+			};
+		}[];
+		error: {} | null;
+	};
+};
+
 type stockOptions = {
 	name: string;
 	watchPriceBelow?: number;
@@ -30,14 +44,18 @@ export default async function checkStocks(options: stockOptions) {
 	if (!customName) customName = name;
 	try {
 		const response = await axios.get<string>(
-			`https://stockprices.dev/api/stocks/${name}`,
+			`https://query1.finance.yahoo.com/v8/finance/chart/${name}`,
 			{
+				headers: {
+					"User-Agent": "Mozilla/5.0",
+					Accept: "application/json",
+				},
 				timeout: 10000,
 			},
 		);
-		const stockInfo = response.data as unknown as stockInfo;
-
-		if (watchPriceBelow && stockInfo.Price < watchPriceBelow) {
+		const stockInfo = response.data as unknown as yahooChartStockInfo;
+		const price = stockInfo.chart.result[0].meta.regularMarketPrice;
+		if (watchPriceBelow && price < watchPriceBelow) {
 			let notification =
 				customNotification ||
 				`🔔 ${customName ?? name} is under ${formatMagnitudeFull(
@@ -51,9 +69,7 @@ export default async function checkStocks(options: stockOptions) {
 				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
-		console.log(
-			`${name} - price: $${stockInfo.Price}, change: ${stockInfo.ChangePercentage} %`,
-		);
+		console.log(`${name} - price: $${price}`);
 	} catch (e: any) {
 		console.error(
 			`⚠️ Error stocks: ${name} - status: ${e.status} - message: ${e.message}`,

@@ -9,7 +9,7 @@ import type { Site } from "../types/Site.ts";
 export class Sites {
 	constructor() {}
 
-	static async checkAllSitesChanges(): Promise<void[]> {
+	static async checkAllSitesChanges(): Promise<string[]> {
 		const sites = Sites.getAll();
 		let promises = [];
 		for (const site of sites) {
@@ -34,7 +34,7 @@ export class Sites {
 		return db.toggleDbBoolean<Site, "active">("sites", id, "active");
 	}
 
-	static async checkSiteChange(site: Site): Promise<void> {
+	static async checkSiteChange(site: Site): Promise<string> {
 		try {
 			const response = await axios.get<string>(site.url, {
 				timeout: 10000,
@@ -43,7 +43,6 @@ export class Sites {
 			const value = $(site.selector).eq(0).text().trim();
 
 			if (!value) {
-				console.log(`⚠️ No match for ${site.name}`);
 				notifier.notify(
 					{
 						title: `No value detected - ${site.name}`,
@@ -58,16 +57,18 @@ export class Sites {
 						// This works on immediate clicks only. Clicks in history of notifications don't work.
 						if (metadata?.activationType === "clicked")
 							exec(`start "" "${site.url}"`);
-					}
+					},
 				);
-				return;
+				return `⚠️ No match for ${site.name}`;
 			}
 
 			let changed = false;
 
 			if (site.last_value !== value) {
 				changed = true;
-				console.log(`🔔 Change detected on ${site.name}`);
+			}
+			Sites.update(value, changed, site.id);
+			if (changed) {
 				notifier.notify(
 					{
 						title: `${site.name}`,
@@ -82,15 +83,18 @@ export class Sites {
 						// This works on immediate clicks only. Clicks in history of notifications don't work.
 						if (metadata?.activationType === "clicked")
 							exec(`start "" "${site.url}"`);
-					}
+					},
 				);
+				return `🔔 Change detected on ${site.name}`;
 			}
-			Sites.update(value, changed, site.id);
+			return "";
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
-				console.error(`❌ Error on ${site.name}: ${err.message}`);
+				return `❌ Error on ${site.name}: ${err.message}`;
 			} else {
-				console.error(`❌ Unknown error on ${site.name}:`, err);
+				console.log(`Unknown error on ${site.name}:`, err);
+
+				return `❌ Unknown error on ${site.name}`;
 			}
 		}
 	}
@@ -105,7 +109,7 @@ export class Sites {
 		name: Site["name"],
 		description: Site["description"],
 		last_value: Site["last_value"],
-		active: Site["active"] = 1
+		active: Site["active"] = 1,
 	) {
 		const stmtSelect = db.getDb().prepare(`
             SELECT * FROM sites WHERE url=? AND selector=? AND name=?
@@ -128,7 +132,7 @@ export class Sites {
 			name,
 			description ?? "",
 			last_value ?? "",
-			active ?? 1
+			active ?? 1,
 		);
 		console.log("✅ Site added!");
 	}
@@ -151,7 +155,7 @@ export class Sites {
                                         ELSE last_changed 
                                     END
                 WHERE id = ?
-                `
+                `,
 			)
 			.run(value, changed ? 1 : 0, siteId);
 	}
@@ -171,7 +175,7 @@ export class Sites {
                     last_changed TEXT,
    					active INTEGER DEFAULT 1
                 )
-                `
+                `,
 			)
 			.run();
 	}

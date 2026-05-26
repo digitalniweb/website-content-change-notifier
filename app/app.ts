@@ -17,8 +17,17 @@ Scheduler.addScheduler("5 */4 * * *", async () => {
 	console.log(
 		`Checking sites by scraping starting at ${new Date().toLocaleString()}`,
 	);
-	await Sites.checkAllSitesChanges();
-	console.log(`Sites were checked.`);
+	let results = await Sites.checkAllSitesChanges();
+	console.log(`Sites were checked`);
+
+	let noChanges = true;
+	results.forEach((r) => {
+		if (r) {
+			noChanges = false;
+			console.log(r);
+		}
+	});
+	if (noChanges) console.log("No changes");
 
 	// you can write other custom watchers here
 
@@ -68,11 +77,17 @@ Scheduler.addScheduler("0 * * * *", async () => {
 	);
 	let stocksCheck = [] as Promise<string>[];
 
-	stocksCheck.push(checkStocks({ name: "IONQ", watchPriceBelow: 20 }));
-	stocksCheck.push(checkStocks({ name: "INFQ", watchPriceBelow: 10 }));
-	stocksCheck.push(checkStocks({ name: "HMC", watchPriceBelow: 20 }));
-	stocksCheck.push(checkStocks({ name: "PFE", watchPriceBelow: 20 }));
-	stocksCheck.push(checkStocks({ name: "GIS", watchPriceBelow: 25 }));
+	let stocksToCheck = [
+		{ name: "IONQ", watchPriceBelow: 20 },
+		{ name: "INFQ", watchPriceBelow: 10 },
+		{ name: "HMC", watchPriceBelow: 20 },
+		{ name: "PFE", watchPriceBelow: 20 },
+		{ name: "GIS", watchPriceBelow: 25 },
+		{ name: "SMR", watchPriceBelow: 9 },
+	];
+
+	stocksToCheck.forEach((stock) => stocksCheck.push(checkStocks(stock)));
+
 	let results = await Promise.all(stocksCheck);
 	console.log(`TICKER  ${"PRICE".padEnd(11)} WATCH THRESHOLD`);
 	results.forEach((r) => console.log(r));

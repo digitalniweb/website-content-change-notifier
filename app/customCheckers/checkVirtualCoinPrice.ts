@@ -21,8 +21,7 @@ export default async function checkVirtualCoinPrice(
 		currencyName = "USD",
 	} = options;
 	if (!name) {
-		console.log('"checkVirtualCoinPrice" name is required');
-		return;
+		return '"checkVirtualCoinPrice" name is required';
 	}
 	if (!customName) customName = name;
 	try {
@@ -39,7 +38,6 @@ export default async function checkVirtualCoinPrice(
 			currency
 		];
 		if (!value) {
-			console.log(`⚠️ ${customName} checker failed`);
 			notifier.notify(
 				{
 					title: `${customName} checker failed`,
@@ -57,7 +55,7 @@ export default async function checkVirtualCoinPrice(
 						);
 				},
 			);
-			return;
+			return `⚠️ ${customName} checker failed`;
 		}
 
 		if (watchPriceBelow && value < watchPriceBelow) {
@@ -74,8 +72,8 @@ export default async function checkVirtualCoinPrice(
 				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
-		console.log(`${customName} price is ${value} ${currencyName}`);
+		return `${customName} price is ${value} ${currencyName}`;
 	} catch (error: any) {
-		console.log(`⚠️ Get ${customName} price error: ${error.message}`);
+		return `⚠️ Get ${customName} price error: ${error.message}`;
 	}
 }

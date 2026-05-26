@@ -42,7 +42,7 @@ Scheduler.addScheduler("0 * * * *", async () => {
 			watchPriceBelow: 0.09,
 		},
 	] as virtualCoinCheckOptions[];
-	let coinsCheck = [] as Promise<void>[];
+	let coinsCheck = [] as Promise<string>[];
 	virtualCoins.forEach((coin) => {
 		coinsCheck.push(
 			checkVirtualCoinPrice({
@@ -53,7 +53,9 @@ Scheduler.addScheduler("0 * * * *", async () => {
 			}),
 		);
 	});
-	await Promise.all(coinsCheck);
+	let results = await Promise.all(coinsCheck);
+	console.log("-----------------------");
+	results.forEach((r) => console.log(r));
 	console.log("-----------------------");
 });
 
@@ -62,13 +64,15 @@ Scheduler.addScheduler("0 * * * *", async () => {
 	console.log(
 		`Checking stock values via API starting at ${new Date().toLocaleString()}`,
 	);
-	let stocksCheck = [] as Promise<void>[];
+	let stocksCheck = [] as Promise<string>[];
+
 	stocksCheck.push(checkStocks({ name: "IONQ", watchPriceBelow: 20 }));
-	stocksCheck.push(checkStocks({ name: "QBTS", watchPriceBelow: 10 }));
-	stocksCheck.push(checkStocks({ name: "QCOM", watchPriceBelow: 120 }));
-	stocksCheck.push(checkStocks({ name: "AMD", watchPriceBelow: 160 }));
-	stocksCheck.push(checkStocks({ name: "MSFT", watchPriceBelow: 300 }));
-	stocksCheck.push(checkStocks({ name: "RGTI", watchPriceBelow: 10 }));
-	await Promise.all(stocksCheck);
+	stocksCheck.push(checkStocks({ name: "INFQ", watchPriceBelow: 10 }));
+	stocksCheck.push(checkStocks({ name: "HMC", watchPriceBelow: 20 }));
+	stocksCheck.push(checkStocks({ name: "PFE", watchPriceBelow: 20 }));
+	stocksCheck.push(checkStocks({ name: "GIS", watchPriceBelow: 25 }));
+	let results = await Promise.all(stocksCheck);
+	console.log(`TICKER  ${"PRICE".padEnd(11)} WATCH THRESHOLD`);
+	results.forEach((r) => console.log(r));
 	console.log("-----------------------");
 });

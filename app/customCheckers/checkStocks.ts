@@ -69,10 +69,8 @@ export default async function checkStocks(options: stockOptions) {
 				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
-		console.log(`${name} - price: $${price}`);
+		return `${name.padEnd(5)} - $${price.toString().padEnd(10)} $${watchPriceBelow}`;
 	} catch (e: any) {
-		console.error(
-			`⚠️ Error stocks: ${name} - status: ${e.status} - message: ${e.message}`,
-		);
+		return `⚠️ Error stocks: ${name} - status: ${e.status} - message: ${e.message}`;
 	}
 }

@@ -72,9 +72,16 @@ Scheduler.addScheduler("0 * * * *", async () => {
 
 // you can create other "Schedulers" with different timings - Every hour
 Scheduler.addScheduler("0 * * * *", async () => {
+	let dayIndex = new Date().getDay();
+	if (dayIndex % 6 === 0) {
+		console.log("It's weekend my dude. Stock market is closed.");
+		return;
+	}
+
 	console.log(
 		`Checking stock values via API starting at ${new Date().toLocaleString()}`,
 	);
+
 	let stocksCheck = [] as Promise<string>[];
 
 	let stocksToCheck = [
@@ -83,13 +90,16 @@ Scheduler.addScheduler("0 * * * *", async () => {
 		{ name: "HMC", watchPriceBelow: 20 },
 		{ name: "PFE", watchPriceBelow: 20 },
 		{ name: "GIS", watchPriceBelow: 25 },
+		{ name: "NOK", watchPriceBelow: 10 },
 		{ name: "SMR", watchPriceBelow: 9 },
+		{ name: "QS", watchPriceBelow: 7 },
+		{ name: "CSG.AS", watchPriceBelow: 10 },
 	];
 
 	stocksToCheck.forEach((stock) => stocksCheck.push(checkStocks(stock)));
 
 	let results = await Promise.all(stocksCheck);
-	console.log(`TICKER  ${"PRICE".padEnd(11)} WATCH THRESHOLD`);
+	console.log(`TICKER  ${"PRICE".padEnd(9)} WATCH  CURRENCY CURRENTLY`);
 	results.forEach((r) => console.log(r));
 	console.log("-----------------------");
 });

@@ -18,7 +18,14 @@ type yahooChartStockInfo = {
 	chart: {
 		result: {
 			meta: {
+				currency: string;
 				regularMarketPrice: number;
+				currentTradingPeriod: {
+					regular: {
+						start: number;
+						end: number;
+					};
+				};
 			};
 		}[];
 		error: {} | null;
@@ -39,7 +46,7 @@ export default async function checkStocks(options: stockOptions) {
 		customName,
 		watchPriceBelow = 0,
 		customNotification,
-		currencyName = "USD",
+		// currencyName = "USD",
 	} = options;
 	if (!customName) customName = name;
 	try {
@@ -55,12 +62,21 @@ export default async function checkStocks(options: stockOptions) {
 		);
 		const stockInfo = response.data as unknown as yahooChartStockInfo;
 		const price = stockInfo.chart.result[0].meta.regularMarketPrice;
+		const tradeStart =
+			stockInfo.chart.result[0].meta.currentTradingPeriod.regular.start;
+		const tradeEnd =
+			stockInfo.chart.result[0].meta.currentTradingPeriod.regular.end;
+		const now = Math.floor(Date.now() / 1000);
+		const tradeStarted = now >= tradeStart && now < tradeEnd;
+
+		const currency = stockInfo.chart.result[0].meta.currency;
+
 		if (watchPriceBelow && price < watchPriceBelow) {
 			let notification =
 				customNotification ||
 				`🔔 ${customName ?? name} is under ${formatMagnitudeFull(
 					watchPriceBelow,
-				)} ${currencyName}!`;
+				)} ${currency}!`;
 			console.log(notification);
 			notifier.notify({
 				title: notification,
@@ -69,7 +85,7 @@ export default async function checkStocks(options: stockOptions) {
 				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
-		return `${name.padEnd(5)} - $${price.toString().padEnd(10)} $${watchPriceBelow}`;
+		return `${name.padEnd(7)} ${price.toString().padEnd(9)} ${watchPriceBelow.toString().padEnd(6)} ${currency.padEnd(8)} ${tradeStarted ? "OPENED" : "close"}`;
 	} catch (e: any) {
 		return `⚠️ Error stocks: ${name} - status: ${e.status} - message: ${e.message}`;
 	}

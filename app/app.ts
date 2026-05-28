@@ -65,7 +65,9 @@ Scheduler.addScheduler("0 * * * *", async () => {
 	let results = await Promise.all(coinsCheck);
 	console.log("-----------------------");
 	console.log("Virtual coins values:");
-
+	console.log(
+		`${"NAME".padEnd(10)} ${"PRICE".padEnd(8)} ${"WATCH".padEnd(8)} CURRENCY`,
+	);
 	results.forEach((r) => console.log(r));
 	console.log("-----------------------");
 });

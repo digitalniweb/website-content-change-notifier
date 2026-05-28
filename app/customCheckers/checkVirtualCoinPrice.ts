@@ -72,7 +72,7 @@ export default async function checkVirtualCoinPrice(
 				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
-		return `${customName} price is ${value} ${currencyName}`;
+		return `${customName.padEnd(10)} ${value.toString().padEnd(8)} ${watchPriceBelow.toString().padEnd(8)} ${currencyName}`;
 	} catch (error: any) {
 		return `⚠️ Get ${customName} price error: ${error.message}`;
 	}

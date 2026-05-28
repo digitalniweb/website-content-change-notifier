@@ -68,6 +68,14 @@ export default async function checkStocks(options: stockOptions) {
 			stockInfo.chart.result[0].meta.currentTradingPeriod.regular.end;
 		const now = Math.floor(Date.now() / 1000);
 		const tradeStarted = now >= tradeStart && now < tradeEnd;
+		let openingHours = "";
+		if (tradeStarted) {
+			let date = new Date(tradeEnd * 1000);
+			openingHours = `(closing: ${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")})`;
+		} else {
+			let date = new Date(tradeStart * 1000);
+			openingHours = `(opening: ${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")})`;
+		}
 
 		const currency = stockInfo.chart.result[0].meta.currency;
 
@@ -85,7 +93,7 @@ export default async function checkStocks(options: stockOptions) {
 				icon: path.resolve(cwd(), "images/mark-green.ico"),
 			});
 		}
-		return `${name.padEnd(7)} ${price.toString().padEnd(9)} ${watchPriceBelow.toString().padEnd(6)} ${currency.padEnd(8)} ${tradeStarted ? "OPENED" : "close"}`;
+		return `${name.padEnd(7)} ${price.toString().padEnd(9)} ${watchPriceBelow.toString().padEnd(6)} ${currency.padEnd(8)} ${(tradeStarted ? "OPENED" : "close").padEnd(6)} ${openingHours}`;
 	} catch (e: any) {
 		return `⚠️ Error stocks: ${name} - status: ${e.status} - message: ${e.message}`;
 	}
